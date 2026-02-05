@@ -14,6 +14,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Setup git credentials
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -36,27 +45,12 @@ jobs:
           POSTS_DIR: content/posts
         run: node scripts/sync-notion.js
 
-      - name: Check for changes
-        id: check_changes
+      - name: Commit and push changes
         run: |
           if git diff --quiet; then
-            echo "No changes"
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
           else
-            echo "Changes detected"
-            echo "changed=true" >> $GITHUB_OUTPUT
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
             git add -A
-            git diff --cached --stat
+            git commit -m "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
+            git push
           fi
-
-      - name: Commit and push changes
-        if: steps.check_changes.outputs.changed == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
-          commit_user_name: github-actions[bot]
-          commit_user_email: github-actions[bot]@users.noreply.github.com
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
