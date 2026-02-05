@@ -5,7 +5,7 @@ import path from "path";
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
-const POSTS_DIR = process.env.POSTS_DIR || "content/posts";
+const POSTS_DIR = process.env.POSTS_DIR || "src/content/posts";
 
 const notion = new Client({ auth: NOTION_API_KEY });
 const n2m = new NotionToMarkdown({ notionClient: notion });
