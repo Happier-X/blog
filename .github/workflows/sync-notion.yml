@@ -57,4 +57,4 @@ jobs:
           git commit -m "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
