@@ -27,7 +27,6 @@ async function syncPage(pageId) {
   const category = properties.分类?.select?.name || "";
   const tags = properties.标签?.multi_select?.map((tag) => tag.name) || [];
 
-  // 使用标题生成 slug（可改为自定义 Slug 属性）
   const slug = title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
 
   // 构建 frontmatter
@@ -42,18 +41,18 @@ slug: "${slug}"
 
 `;
 
+  // 文件名使用标题
+  const filePath = path.join(POSTS_DIR, `${title}.md`);
   const fileContent = frontmatter + mdString.parent;
-  const fileName = `${slug}.md`;
-  const filePath = path.join(POSTS_DIR, fileName);
 
   // 确保目录存在
   await fs.mkdir(POSTS_DIR, { recursive: true });
 
   // 写入文件
   await fs.writeFile(filePath, fileContent, "utf-8");
-  console.log(`✓ Synced: ${fileName}`);
+  console.log(`✓ Synced: ${title}.md`);
 
-  return slug;
+  return title;
 }
 
 // 同步所有文章
@@ -75,14 +74,14 @@ async function syncAllPosts() {
     },
   });
 
-  const syncedSlugs = new Set();
+  const syncedTitles = new Set();
 
   // 同步新文章和更新文章
   for (const page of response.results) {
     const pageId = page.id;
     try {
-      const slug = await syncPage(pageId);
-      syncedSlugs.add(slug);
+      const title = await syncPage(pageId);
+      syncedTitles.add(title);
     } catch (error) {
       console.error(`✗ Failed to sync page ${pageId}:`, error.message);
     }
@@ -93,8 +92,9 @@ async function syncAllPosts() {
     const files = await fs.readdir(POSTS_DIR);
     for (const file of files) {
       if (file.endsWith(".md")) {
-        const localSlug = file.replace(/\.md$/, "");
-        if (!syncedSlugs.has(localSlug)) {
+        // 文件名就是标题
+        const localTitle = file.replace(/\.md$/, "");
+        if (!syncedTitles.has(localTitle)) {
           const filePath = path.join(POSTS_DIR, file);
           await fs.unlink(filePath);
           console.log(`🗑️  Deleted: ${file}`);
@@ -107,7 +107,7 @@ async function syncAllPosts() {
     }
   }
 
-  console.log(`\n✅ Sync complete! Total: ${syncedSlugs.size} posts`);
+  console.log(`\n✅ Sync complete! Total: ${syncedTitles.size} posts`);
 }
 
 syncAllPosts().catch((error) => {

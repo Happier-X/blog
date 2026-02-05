@@ -29,7 +29,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm add @notionhq/client notion-to-md gray-matter
+        run: pnpm install
 
       - name: Sync Notion to Markdown
         env:
