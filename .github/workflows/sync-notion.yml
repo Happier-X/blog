@@ -14,14 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-          fetch-depth: 0
-
-      - name: Setup git credentials
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -44,24 +36,22 @@ jobs:
           POSTS_DIR: content/posts
         run: node scripts/sync-notion.js
 
-      - name: Commit changes
+      - name: Get changed files
+        id: changed-files
         run: |
-          if git diff --quiet; then
-            echo "No changes to commit"
-            echo "commit=false" >> $GITHUB_OUTPUT
-          else
-            git add -A
-            git commit -m "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
-            echo "commit=true" >> $GITHUB_OUTPUT
-          fi
-        id: commit
+          echo "files=$(git ls-files --others --exclude-standard content/posts/ | grep '\.md$' | head -20)" >> $GITHUB_OUTPUT
+          echo "deleted=$(git ls-files --deleted content/posts/ | head -20)" >> $GITHUB_OUTPUT
 
-      - name: Setup GitHub CLI
-        if: steps.commit.outputs.commit == 'true'
-        run: |
-          gh auth login --hostname github.com --with-token <<< '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
-          gh auth setup-git
-
-      - name: Push changes
-        if: steps.commit.outputs.commit == 'true'
-        run: git push
+      - name: Commit and push using GitHub API
+        if: steps.changed-files.outputs.files != '' || steps.changed-files.outputs.deleted != ''
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          commit-message: "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
+          committer: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          title: "Sync Notion posts $(date +'%Y-%m-%d')"
+          body: "Automated sync from Notion"
+          branch: sync-notion-posts
+          delete-branch: true
+          add-paths: content/posts/
