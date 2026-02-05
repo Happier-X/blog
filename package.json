@@ -14,11 +14,11 @@
     "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^4.2.1",
     "@astrojs/vercel": "^9.0.4",
     "@floating-ui/react": "^0.27.12",
     "@nanostores/react": "^0.8.4",
-    "astro": "^5.17.1",
+    "astro": "^5.6.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
     "gitalk": "^1.8.0",
@@ -30,11 +30,11 @@
     "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/markdown-remark": "^6.3.10",
-    "@astrojs/mdx": "^4.3.13",
-    "@astrojs/rss": "^4.0.15",
-    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/markdown-remark": "^6.3.1",
+    "@astrojs/mdx": "^4.2.3",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.3.1",
     "@expressive-code/plugin-collapsible-sections": "^0.41.1",
     "@expressive-code/plugin-line-numbers": "^0.41.1",
     "@iconify/json": "^2.2.321",

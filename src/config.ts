@@ -14,13 +14,12 @@ import type {
 
 //--- Readme Page Config ---
 export const SITE: Site = {
-  title: 'Litos',
-  description:
-    'Litos is a modern blogging theme built on Astro.js, designed for developers. It supports multiple post layouts, photo displays, project displays, and more, providing an elegant user experience and powerful customization capabilities.',
+  title: "Happier's Blog",
+  description: '悟已往之不谏,知来者之可追.',
   website: 'https://litos.vercel.app/',
-  lang: 'en',
+  lang: 'cn',
   base: '/',
-  author: 'HappierX',
+  author: 'Happier',
   ogImage: '/og-image.webp',
   transition: false,
 }
@@ -67,18 +66,12 @@ export const FOOTER_LINKS: Link[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'github',
-    url: 'https://github.com/yourname',
+    url: 'https://github.com/Happier-X',
     icon: 'icon-[ri--github-fill]',
-    count: 19,
-  },
-  {
-    name: 'twitter',
-    url: 'https://x.com/yourname',
-    icon: 'icon-[ri--twitter-x-fill]',
   },
   {
     name: 'bilibili',
-    url: 'https://space.bilibili.com/yourSpaceId',
+    url: 'https://space.bilibili.com/401106272',
     icon: 'icon-[ri--bilibili-fill]',
   },
 ]
@@ -194,7 +187,7 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
 
 export const GITHUB_CONFIG: GithubConfig = {
   ENABLED: true,
-  GITHUB_USERNAME: 'HappierX',
+  GITHUB_USERNAME: 'Happier-X',
   TOOLTIP_ENABLED: true,
 }
 

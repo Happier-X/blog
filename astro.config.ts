@@ -8,20 +8,27 @@ import expressiveCode from 'astro-expressive-code'
 import { remarkPlugins, rehypePlugins } from './plugins'
 import { SITE } from './src/config'
 
+import vercel from '@astrojs/vercel';
+
 export default defineConfig({
   site: SITE.website,
   base: SITE.base,
+
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport',
   },
+
   vite: {
     plugins: [tailwindcss()],
   },
+
   markdown: {
     syntaxHighlight: false,
     remarkPlugins,
     rehypePlugins,
   },
+
   integrations: [expressiveCode(), mdx(), react(), sitemap(), robotsTxt()],
+  adapter: vercel(),
 })
