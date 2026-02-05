@@ -22,7 +22,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -45,12 +44,24 @@ jobs:
           POSTS_DIR: content/posts
         run: node scripts/sync-notion.js
 
-      - name: Commit and push changes
+      - name: Commit changes
         run: |
           if git diff --quiet; then
             echo "No changes to commit"
+            echo "commit=false" >> $GITHUB_OUTPUT
           else
             git add -A
             git commit -m "docs: sync Notion posts $(date +'%Y-%m-%d %H:%M')"
-            git push
+            echo "commit=true" >> $GITHUB_OUTPUT
           fi
+        id: commit
+
+      - name: Setup GitHub CLI
+        if: steps.commit.outputs.commit == 'true'
+        run: |
+          gh auth login --hostname github.com --with-token <<< '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+          gh auth setup-git
+
+      - name: Push changes
+        if: steps.commit.outputs.commit == 'true'
+        run: git push
