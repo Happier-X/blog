@@ -2,6 +2,10 @@ import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import fs from "fs/promises";
 import path from "path";
+import dotenv from "dotenv";
+
+// 加载 .env
+dotenv.config({ path: ".env" });
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
@@ -30,9 +34,11 @@ async function syncPage(pageId) {
   const slug = title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
 
   // 构建 frontmatter
+  const shortDate = new Date(date).toISOString().split("T")[0];
   const frontmatter = `---
 title: "${title.replace(/"/g, '\\"')}"
-date: "${new Date(date).toISOString().split("T")[0]}"
+date: "${shortDate}"
+pubDate: "${shortDate}"
 description: "${description.replace(/"/g, '\\"')}"
 category: "${category}"
 tags: [${tags.map((t) => `"${t}"`).join(", ")}]
