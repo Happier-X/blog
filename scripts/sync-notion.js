@@ -2,10 +2,10 @@ import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import fs from "fs/promises";
 import path from "path";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-// 加载 .env
-dotenv.config({ path: ".env" });
+// // 加载 .env
+// dotenv.config({ path: ".env" });
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
